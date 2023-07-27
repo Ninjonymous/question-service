@@ -55,39 +55,14 @@ public class QuestionController {
     //get question
     @GetMapping("getQuestion")
     public ResponseEntity<List<QuestionWrapper>> getQuestionsFromId(@RequestBody List<Integer> questionsId){
-        List<QuestionWrapper> wrapper = new ArrayList<>();
-        List<Question> questions = new ArrayList<>();
-        for (Integer id : questionsId){
-            questions.add(questionDao.findById(id).get());
-        }
-
-        for(Question q : questions){
-            QuestionWrapper wrap = new QuestionWrapper();
-            wrap.setId(q.getId());
-            wrap.setQuestionTitle(q.getQuestionTitle());
-            wrap.setOption1(q.getOption1());
-            wrap.setOption2(q.getOption2());
-            wrap.setOption3(q.getOption3());
-            wrap.setOption4(q.getOption4());
-            wrapper.add(wrap);
-        }
-
-        return new ResponseEntity<>(wrapper, HttpStatus.OK);
+        return questionService.getQuestionsFromId(questionsId);
     }
 
     //get score
     @PostMapping("getScore")
     public ResponseEntity<Integer> getScore(@RequestBody List<Response> responses){
-        int right = 0;
-        int i = 0;
-        for (Response response : responses){
-            Question question = questionDao.findById(response.getId()).get();
-            if(response.getResponse().equals(question.getRightAnswer())){
-                right++;
-            }
-            i++;
-        }
-        return new ResponseEntity<>(right,HttpStatus.OK);
+        return questionService.getScore(responses);
+
     }
 
 
